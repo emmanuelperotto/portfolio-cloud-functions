@@ -9,5 +9,5 @@ export const fetchDollarRate = functions.pubsub.schedule('every 20 minutes').onR
   const { data } = await Axios.get('https://api.exchangeratesapi.io/latest?base=USD&symbols=BRL')
   const { BRL } = data.rates
 
-  await db.collection('exchange_rates').doc('dolar').set({BRL});
+  await db.collection('exchange_rates').doc('dollar').set({BRL});
 });
