@@ -3,7 +3,7 @@ import { db } from "./admin";
 export function createProfile(userRecord: any, _context: any) {
   const {
     email, emailVerified, phoneNumber, uid,
-    isAnonymous, displayName, photoURL, providerId, metadata
+    isAnonymous, displayName, photoURL, providerId
   } = userRecord;
 
   if (isAnonymous) {
@@ -15,7 +15,7 @@ export function createProfile(userRecord: any, _context: any) {
     .doc(uid)
     .set({
       email, phoneNumber, emailVerified,
-      displayName, photoURL, providerId, metadata
+      displayName, photoURL, providerId
     })
     .catch(console.error);
 };
