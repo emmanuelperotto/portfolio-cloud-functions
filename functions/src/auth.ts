@@ -1,20 +1,33 @@
 import { db } from "./admin";
-import { Request, Response } from "firebase-functions";
+import { https } from "firebase-functions";
 
-export function createProfile(req: Request, res: Response) {
-  const { userData: { uid,email, phoneNumber, emailVerified,
-    displayName, photoURL, providerId } } = req.body;
+export function createProfile(data: any, context: https.CallableContext) {
+  // Checking that the user is authenticated.
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new https.HttpsError('failed-precondition', 'The function must be called ' +
+        'while authenticated.');
+  }
+
+  const uid = context.auth.uid;
+
+  const {
+    name, picture, email,
+    phone_number: phoneNumber,
+    email_verified: emailVerified
+  } = context.auth.token;
+  const providerId  = data.providerId || null;
 
   db.collection("Users")
     .doc(uid)
     .set({
       email, phoneNumber, emailVerified,
-      displayName, photoURL, providerId
+      name, picture, providerId
     })
-    .then((data) => {
-      return res.status(200).json({data})
+    .then((result) => {
+      return {...result}
     })
     .catch((error) => {
-      return res.status(422).json({ errorMessage: error.message })
+      throw new https.HttpsError('unknown', error.message);
     });
 };

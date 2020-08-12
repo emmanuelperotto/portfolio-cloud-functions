@@ -5,5 +5,5 @@ import { createProfile } from './auth';
 
 export default {
   fetchDollarRate: functions.pubsub.schedule('every 20 minutes').onRun(fetchDollarRate),
-  createProfile: functions.https.onRequest(createProfile)
+  createProfile: functions.https.onCall(createProfile)
 }
