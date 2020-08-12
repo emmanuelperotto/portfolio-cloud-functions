@@ -1,21 +1,20 @@
 import { db } from "./admin";
+import { Request, Response } from "firebase-functions";
 
-export function createProfile(userRecord: any, _context: any) {
-  const {
-    email, emailVerified, phoneNumber, uid,
-    isAnonymous, displayName, photoURL, providerId
-  } = userRecord;
+export function createProfile(req: Request, res: Response) {
+  const { userData: { uid,email, phoneNumber, emailVerified,
+    displayName, photoURL, providerId } } = req.body;
 
-  if (isAnonymous) {
-    return;
-  }
-
-  return db
-    .collection("Users")
+  db.collection("Users")
     .doc(uid)
     .set({
       email, phoneNumber, emailVerified,
       displayName, photoURL, providerId
     })
-    .catch(console.error);
+    .then((data) => {
+      res.status(200).send({data})
+    })
+    .catch((error) => {
+      res.status(422).send({ errorMessage: error.message })
+    });
 };
