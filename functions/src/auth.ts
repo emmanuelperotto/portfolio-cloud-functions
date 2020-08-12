@@ -12,9 +12,9 @@ export function createProfile(req: Request, res: Response) {
       displayName, photoURL, providerId
     })
     .then((data) => {
-      res.status(200).send({data})
+      res.status(200).json({data})
     })
     .catch((error) => {
-      res.status(422).send({ errorMessage: error.message })
+      res.status(422).json({ errorMessage: error.message })
     });
 };
